@@ -3,7 +3,8 @@ import './App.css';
 import { Document, Page } from 'react-pdf';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
-const API_IP_ADDR = 'http://<<YOUR_LOCAL_IP_ADDR>>:4200'; // Insert your own device's IP local address e.g. 192.168.1.78
+const YOUR_LOCAL_IP_ADDR = 'INSERT LOCAL IP ADDRESS HERE'; // Insert your own device's IP local address e.g. 192.168.1.78
+const API_IP_ADDR = `http://${YOUR_LOCAL_IP_ADDR}:4200`; 
 
 class App extends Component {
   state = {
