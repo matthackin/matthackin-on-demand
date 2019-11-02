@@ -1,0 +1,23 @@
+{
+  "name": "mod-api",
+  "version": "1.0.0",
+  "description": "API for home server 'matthackin on demand'. Returns file system for displaying files on the react front end.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/matthackin/matthackin-on-demand.git"
+  },
+  "author": "Matthew Hatton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matthackin/matthackin-on-demand/issues"
+  },
+  "homepage": "https://github.com/matthackin/matthackin-on-demand#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
