@@ -8,4 +8,4 @@ This is a project I made for my home network to allow family to read from a coll
 - Place your PDF files in <code>/public/assets/pdf</code>
 - In src/App.js, change <code>INSERT LOCAL IP ADDRESS HERE</code> to your host device's local IP address
 - <code>npm run start:all</code> will start the backend and the frontend
-- <code>localhost:3000</code> to view the site
+- <code>localhost:3001</code> to view the site
