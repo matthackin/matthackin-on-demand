@@ -3,8 +3,8 @@ import './App.css';
 import { Document, Page } from 'react-pdf';
 import Button from 'react-bootstrap/Button';
 import Dropdown from 'react-bootstrap/Dropdown';
-const YOUR_LOCAL_IP_ADDR = 'INSERT LOCAL IP ADDRESS HERE'; // Insert your own device's IP local address e.g. 192.168.1.78
-const API_IP_ADDR = `http://${YOUR_LOCAL_IP_ADDR}:4200`; 
+const YOUR_LOCAL_IP_ADDR = 'INSERT LOCAL IP ADDRESS HERE'; // Insert your own device's IP local address
+const API_IP_ADDR = `http://${YOUR_LOCAL_IP_ADDR}:4201`; 
 
 class App extends Component {
   state = {
@@ -13,7 +13,8 @@ class App extends Component {
     files: [],
     currentFile: 'Select a magazine',
     pageWidth: 500,
-    singlePageView: false
+    singlePageView: false,
+    pageOrder: 'normal'
   }
 
   callAPI(path) {
@@ -92,6 +93,21 @@ class App extends Component {
     });
   }
 
+  fixPageOrder = () => {
+    const { pageOrder, pageNumber } = this.state;
+    if (pageOrder === 'normal') {
+      this.setState({
+        pageNumber: pageNumber + 1,
+        pageOrder: 'increased'
+      })
+    } else if (pageOrder === 'increased') {
+      this.setState({
+        pageNumber: pageNumber - 1,
+        pageOrder: 'normal'
+      })
+    }
+  }
+
   componentDidMount() {
     this.callAPI('/pdfs')
     document.addEventListener('keydown', event => {
@@ -125,86 +141,100 @@ class App extends Component {
   }
 
   render() {
-    const { pageNumber, numPages, files, currentFile, pageWidth, singlePageView } = this.state;
+    const { pageNumber, numPages, files, currentFile, pageWidth, singlePageView, pageOrder } = this.state;
 
     return (
       <div className="App">
         <div className="App-menu">
-        <Dropdown >
-          <Dropdown.Toggle  
-          variant="info"
-          id="dropdown-basic">
-            {currentFile}
-          </Dropdown.Toggle>
 
-          <Dropdown.Menu className='App-scrollable-menu'>
-          {files.map(fileName => (
-              <Dropdown.Item key={fileName} onClick={e => this.handleClick(e, fileName)}>
-                  {fileName}
-              </Dropdown.Item>
-            ))}
-          </Dropdown.Menu>
-        </Dropdown>
-            <Button
-              className="App-menu--item"
-              disabled={pageNumber <= 1}
-              onClick={this.previousPage}
-            >
-              {'<- Previous Page'}
-            </Button>
+          <Dropdown >
+            <Dropdown.Toggle  
+            variant="info"
+            id="dropdown-basic">
+              {currentFile}
+            </Dropdown.Toggle>
+            <Dropdown.Menu className='App-scrollable-menu'>
+            {files.map(fileName => (
+                <Dropdown.Item key={fileName} onClick={e => this.handleClick(e, fileName)}>
+                    {fileName}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+
+          <Button
+            variant="warning"
+            className="App-menu--item"
+            onClick={this.fixPageOrder}
+          >
+            Fix Page Order
+          </Button>
+
+          <Button
+            className="App-menu--item"
+            disabled={pageNumber <= 1}
+            onClick={this.previousPage}
+          >
+            {'<- Previous Page'}
+          </Button>
             
-            {!singlePageView && 
-              <div className="App-menu--item">
-               Pages {pageNumber},{pageNumber+1} of {numPages}
-              </div>
-            }
+          {!singlePageView && 
+            <div className="App-menu--item">
+              Pages {pageNumber},{pageNumber+1} of {numPages}
+            </div>
+          }
 
-            {singlePageView &&
-              <div className="App-menu--item">
-                Page {pageNumber} of {numPages}
-              </div>
-            }
+          {singlePageView &&
+            <div className="App-menu--item">
+              Page {pageNumber} of {numPages}
+            </div>
+          }
 
+          <Button
+            className="App-menu--item"
+            disabled={pageNumber >= numPages-1}
+            onClick={this.nextPage}
+          >
+            Next Page ->
+          </Button>
+
+          <Button
+          variant="danger"
+            className="App-menu--item"
+            onClick={this.decreasePageWidth}
+          >
+            Zoom out (-)
+          </Button>
+
+          <Button
+            variant="success"
+            className="App-menu--item"
+            onClick={this.increasePageWidth}
+          >
+            Zoom in (+)
+          </Button>
+
+          {!singlePageView && 
             <Button
+              variant="secondary"
               className="App-menu--item"
-              disabled={pageNumber >= numPages-1}
-              onClick={this.nextPage}
+              onClick={this.toggleSinglePageView}
             >
-              Next Page ->
+              Single Page View (v)
             </Button>
+          }
+
+          {singlePageView && 
             <Button
-            variant="danger"
+              variant="secondary"
               className="App-menu--item"
-              onClick={this.decreasePageWidth}
+              onClick={this.toggleSinglePageView}
             >
-              Zoom out (-)
+              Double Page View (v)
             </Button>
-            <Button
-              variant="success"
-              className="App-menu--item"
-              onClick={this.increasePageWidth}
-            >
-              Zoom in (+)
-            </Button>
-            {!singlePageView && 
-              <Button
-                variant="secondary"
-                className="App-menu--item"
-                onClick={this.toggleSinglePageView}
-              >
-                Single Page View (v)
-              </Button>
-            }
-            {singlePageView && 
-              <Button
-                variant="secondary"
-                className="App-menu--item"
-                onClick={this.toggleSinglePageView}
-              >
-                Double Page View (v)
-              </Button>
-            }
-          </div>
+          }
+        </div>
+
         <div className="App-main-content">
           <Document 
             file={'assets/pdf/'+currentFile}

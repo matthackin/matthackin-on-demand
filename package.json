@@ -66,8 +66,8 @@
   },
   "scripts": {
     "start:all": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "backend": "node api/app.js",
-    "frontend": "node scripts/start.js",
+    "backend": "set PORT=4201 && node api/app.js",
+    "frontend": "set PORT=3001 && node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js"
   },
